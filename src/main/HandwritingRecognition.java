@@ -3,7 +3,11 @@ package main;
 public class HandwritingRecognition {
 
 	public HandwritingRecognition() {
-		// TODO Auto-generated constructor stub
+		
 	}
-
+	
+	public static void main(String[] args) {
+		new HandwritingRecognition();
+	}
+	
 }
