@@ -10,7 +10,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,12 +44,13 @@ public class HandwritingRecognition {
 
 	private BufferedImage image;
 	private int penSize = 10;
-
+	
 	private NeuralNetwork neuralNetwork;
 	private final int NN_IMAGE_SIZE = 100;
-
+	
 	public HandwritingRecognition() {
-		// setupNetwork();
+		setupNetwork();
+		trainNetwork();
 		setupFrame();
 	}
 
@@ -136,11 +143,79 @@ public class HandwritingRecognition {
 	}
 
 	private void setupNetwork() {
-		neuralNetwork = new NeuralNetwork(ActivationFunctionType.SIGMOID2, new Range(-1, 1), 0,
-				new int[] { 22500, 1000, 300, 50, 10 });
+		neuralNetwork = new NeuralNetwork(ActivationFunctionType.SIGMOID2, new Range(-1, 1), 0, new int[] { NN_IMAGE_SIZE * NN_IMAGE_SIZE, NN_IMAGE_SIZE, 10 });
 	}
-
+	
+	private void trainNetwork() {
+		for(int i=0; i<1; i++) {
+			for(File file : new File("data").listFiles()) {
+				System.out.println(file.toString());
+				try {
+					BufferedImage image = ImageIO.read(file);
+					
+					double[] input = convertArray(convertImage(image));
+					double[] target = new double[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+					
+					System.out.println("training...");
+					neuralNetwork.train(input, target, 0.5);
+					System.out.println("end");
+					
+					/*for(int y=0; y<colors.length; y++) {
+						for(int x=0; x<colors.length; x++) {
+							System.out.print(colors[x][y]);
+							System.out.print(" ");
+						}
+						System.out.println();
+					}*/
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	private int[] convertImage(BufferedImage image) {
+		int[][] colors = new int[image.getWidth()][image.getHeight()];
+		for(int x=0; x<colors.length; x++) {
+			for(int y=0; y<colors[x].length; y++) {
+				Color color = new Color(image.getRGB(x, y));
+				if(color.equals(Color.BLACK)) {
+					colors[x][y] = 0;
+				} else {
+					colors[x][y] = 1;
+				}
+			}
+		}
+		return convertArrayDimension(colors);
+	}
+	
+	private int[] convertArrayDimension(int[][] array) {
+		List<Integer> output = new ArrayList<>();
+		for(int x=0; x<array.length; x++) {
+			for(int y=0; y<array[x].length; y++) {
+				output.add(array[x][y]);
+			}
+		}
+		Integer[] output2 = output.toArray(new Integer[0]);
+		int[] output3 = new int[output2.length];
+		for(int i=0; i < output3.length; i++) {
+			output3[i] = output2[i];
+		}
+		return output3;
+	}
+	
+	private double[] convertArray(int[] array) {
+		double[] output = new double[array.length];
+		for(int i=0; i<output.length; i++) {
+			output[i] = array[i];
+		}
+		return output;
+	}
+	
 	private void resetImage() {
+		neuralNetwork.start(convertArray(convertImage(Tools.scaleImage(image, NN_IMAGE_SIZE, NN_IMAGE_SIZE))));
+		System.out.println(Arrays.toString(neuralNetwork.getOutput()));
+		
 		Graphics2D graphics = image.createGraphics();
 		graphics.setColor(Color.WHITE);
 		graphics.fillRect(0, 0, 200, 200);

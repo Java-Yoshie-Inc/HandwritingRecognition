@@ -31,9 +31,18 @@ public class ImageCreator {
 	
 	private BufferedImage image;
 	
+	private int inputNumber;
+	
 	private final int penSize = (int) ((SIZE.getWidth() + SIZE.getHeight()) / 25d);
 	
 	public ImageCreator() {
+		String input = JOptionPane.showInputDialog("Do you want to draw every time the same number?");
+		if(input.equals("yes")) {
+			inputNumber = Integer.parseInt(JOptionPane.showInputDialog("Which number?"));
+		} else {
+			inputNumber = -1;
+		}
+		
 		setupImage();
 		createFrame();
 		loop();
@@ -41,11 +50,14 @@ public class ImageCreator {
 	
 	private void save() throws IOException {
 		int i = (int) (System.currentTimeMillis() / 1000d);
-		int number = Integer.parseInt(JOptionPane.showInputDialog("Which number did you draw?"));
+		int number;
+		if(inputNumber == -1) {
+			number = Integer.parseInt(JOptionPane.showInputDialog("Which number did you draw?"));
+		} else {
+			number = inputNumber;
+		}
 		
-		BufferedImage image = new BufferedImage(OUTPUT_SIZE.width, OUTPUT_SIZE.height, this.image.getType());
-		image.getGraphics().drawImage(this.image, 0, 0, image.getWidth(), image.getHeight(), null);
-		ImageIO.write(image, "png", new File("data/" + number + "-" + i + ".png"));
+		ImageIO.write(Tools.scaleImage(image, OUTPUT_SIZE.width, OUTPUT_SIZE.height), "png", new File("data/" + number + "-" + i + ".png"));
 	}
 	
 	private void setupImage() {
