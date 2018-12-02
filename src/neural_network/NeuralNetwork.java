@@ -1,5 +1,7 @@
 package neural_network;
 
+import main.LoadingBar;
+
 public class NeuralNetwork {
 	
 	private Layer[] layers;
@@ -17,12 +19,14 @@ public class NeuralNetwork {
 		layers = new Layer[layerNeuronAmount.length];
 		for(int currentLayer = layerNeuronAmount.length-1; currentLayer >= 0; currentLayer--) {
 			Neuron[] neurons = new Neuron[layerNeuronAmount[currentLayer]];
+			LoadingBar.startLoading(0, layerNeuronAmount[currentLayer], "Creating layer " + (currentLayer + 1) + " of neural network...");
 			for(int currentNeuron=0; currentNeuron<neurons.length; currentNeuron++) {
 				neurons[currentNeuron] = new Neuron(activationFunction);
 				neurons[currentNeuron].setBias(bias);
 				if(currentLayer < layerNeuronAmount.length-1) {
 					neurons[currentNeuron].connect(NeuralNetworkTools.random(weightRange.getMin(), weightRange.getMax()), layers[currentLayer+1].getNeurons());
 				}
+				LoadingBar.setProgress(currentNeuron);
 			}
 			layers[currentLayer] = new Layer(neurons);
 		}

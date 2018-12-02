@@ -44,10 +44,10 @@ public class HandwritingRecognition {
 
 	private BufferedImage image;
 	private int penSize = 10;
-	
+
 	private NeuralNetwork neuralNetwork;
 	private final int NN_IMAGE_SIZE = 100;
-	
+
 	public HandwritingRecognition() {
 		setupNetwork();
 		trainNetwork();
@@ -118,7 +118,7 @@ public class HandwritingRecognition {
 			public void mouseDragged(MouseEvent e) {
 				int x = e.getX(), y = e.getY();
 
-				if (x > 0 && x < 200 && y > 0 && y < 200) {
+				if (x > -penSize && x < 200 && y > -penSize && y < 200) {
 					Graphics2D graphics = image.createGraphics();
 					graphics.setColor(Color.BLACK);
 					graphics.fillOval(x, y, penSize, penSize);
@@ -145,21 +145,21 @@ public class HandwritingRecognition {
 	private void setupNetwork() {
 		neuralNetwork = new NeuralNetwork(ActivationFunctionType.SIGMOID2, new Range(-1, 1), 0, new int[] { NN_IMAGE_SIZE * NN_IMAGE_SIZE, NN_IMAGE_SIZE, 10 });
 	}
-	
+
 	private void trainNetwork() {
 		for(int i=0; i<1; i++) {
 			for(File file : new File("data").listFiles()) {
 				System.out.println(file.toString());
 				try {
 					BufferedImage image = ImageIO.read(file);
-					
+
 					double[] input = convertArray(convertImage(image));
 					double[] target = new double[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-					
+
 					System.out.println("training...");
 					neuralNetwork.train(input, target, 0.5);
 					System.out.println("end");
-					
+
 					/*for(int y=0; y<colors.length; y++) {
 						for(int x=0; x<colors.length; x++) {
 							System.out.print(colors[x][y]);
@@ -173,7 +173,7 @@ public class HandwritingRecognition {
 			}
 		}
 	}
-	
+
 	private int[] convertImage(BufferedImage image) {
 		int[][] colors = new int[image.getWidth()][image.getHeight()];
 		for(int x=0; x<colors.length; x++) {
@@ -188,7 +188,7 @@ public class HandwritingRecognition {
 		}
 		return convertArrayDimension(colors);
 	}
-	
+
 	private int[] convertArrayDimension(int[][] array) {
 		List<Integer> output = new ArrayList<>();
 		for(int x=0; x<array.length; x++) {
@@ -203,7 +203,7 @@ public class HandwritingRecognition {
 		}
 		return output3;
 	}
-	
+
 	private double[] convertArray(int[] array) {
 		double[] output = new double[array.length];
 		for(int i=0; i<output.length; i++) {
@@ -211,11 +211,11 @@ public class HandwritingRecognition {
 		}
 		return output;
 	}
-	
+
 	private void resetImage() {
 		neuralNetwork.start(convertArray(convertImage(Tools.scaleImage(image, NN_IMAGE_SIZE, NN_IMAGE_SIZE))));
 		System.out.println(Arrays.toString(neuralNetwork.getOutput()));
-		
+
 		Graphics2D graphics = image.createGraphics();
 		graphics.setColor(Color.WHITE);
 		graphics.fillRect(0, 0, 200, 200);
