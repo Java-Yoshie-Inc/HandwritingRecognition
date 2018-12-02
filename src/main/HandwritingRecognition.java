@@ -137,7 +137,7 @@ public class HandwritingRecognition {
 
 	private void setupNetwork() {
 		neuralNetwork = new NeuralNetwork(ActivationFunctionType.SIGMOID2, new Range(-1, 1), 0,
-				new int[] { 22500, 1000, 300, 50, 10 });
+				new int[] { NN_IMAGE_SIZE * NN_IMAGE_SIZE, NN_IMAGE_SIZE * 10, NN_IMAGE_SIZE, 50, 10 });
 	}
 
 	private void resetImage() {
