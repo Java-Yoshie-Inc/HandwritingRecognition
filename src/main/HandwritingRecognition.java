@@ -43,7 +43,7 @@ public class HandwritingRecognition {
 	private final int NN_IMAGE_SIZE = 100;
 
 	public HandwritingRecognition() {
-		// setupNetwork();
+		setupNetwork();
 		setupFrame();
 	}
 
