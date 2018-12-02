@@ -18,6 +18,7 @@ public class HandwritingRecognition {
 	private BufferedImage image;
 	
 	private NeuralNetwork neuralNetwork;
+	private final int NN_IMAGE_SIZE = 100;
 
 	public HandwritingRecognition() {
 		setupNetwork();
@@ -38,11 +39,11 @@ public class HandwritingRecognition {
 		frame.add(panel);
 		frame.setVisible(true);
 	}
-
+	
 	private void setupNetwork() {
-		neuralNetwork = new NeuralNetwork(ActivationFunctionType.SIGMOID2, new Range(-1, 1), 0, new int[] {22500, 1000, 300, 50, 10});
+		neuralNetwork = new NeuralNetwork(ActivationFunctionType.SIGMOID2, new Range(-1, 1), 0, new int[] {NN_IMAGE_SIZE*NN_IMAGE_SIZE, NN_IMAGE_SIZE*10, NN_IMAGE_SIZE, 10});
 	}
-
+	
 	public static void main(String[] args) {
 		new HandwritingRecognition();
 	}
