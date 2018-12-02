@@ -6,12 +6,18 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import neural_network.ActivationFunctionType;
+import neural_network.NeuralNetwork;
+import neural_network.Range;
+
 public class HandwritingRecognition {
 
 	private JFrame frame;
 	private JPanel panel;
 
 	private BufferedImage image;
+	
+	private NeuralNetwork neuralNetwork;
 
 	public HandwritingRecognition() {
 		setupNetwork();
