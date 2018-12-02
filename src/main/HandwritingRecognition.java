@@ -13,7 +13,7 @@ public class HandwritingRecognition {
 	}
 	
 	private void setupNetwork() {
-		neuralNetwork = new NeuralNetwork(ActivationFunctionType.SIGMOID2, new Range(-1, 1), 0, new int[] {});
+		neuralNetwork = new NeuralNetwork(ActivationFunctionType.SIGMOID2, new Range(-1, 1), 0, new int[] {22500, 1000, 300, 50, 10});
 	}
 	
 	public static void main(String[] args) {
