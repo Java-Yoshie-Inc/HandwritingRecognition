@@ -111,7 +111,7 @@ public class HandwritingRecognition {
 			public void mouseDragged(MouseEvent e) {
 				int x = e.getX(), y = e.getY();
 
-				if (x > 0 && x < 200 && y > 0 && y < 200) {
+				if (x > -penSize && x < 200 && y > -penSize && y < 200) {
 					Graphics2D graphics = image.createGraphics();
 					graphics.setColor(Color.BLACK);
 					graphics.fillOval(x, y, penSize, penSize);
