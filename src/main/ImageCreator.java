@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -70,7 +72,7 @@ public class ImageCreator {
 	private void update(MouseEvent e) {
 		Graphics g = image.getGraphics();
 		g.setColor(Color.BLACK);
-		g.fillOval(e.getX(), e.getY(), penSize, penSize);
+		g.fillOval(e.getX()-penSize/2, e.getY()-penSize/2, penSize, penSize);
 	}
 	
 	private void draw(Graphics2D g) {
@@ -91,6 +93,25 @@ public class ImageCreator {
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		frame.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+					setupImage();
+				}
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				
+			}
+		});
 		
 		panel.addMouseMotionListener(new MouseMotionListener() {
 			@Override
