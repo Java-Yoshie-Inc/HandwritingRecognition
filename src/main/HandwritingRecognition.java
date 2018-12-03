@@ -150,7 +150,7 @@ public class HandwritingRecognition {
 		
 		int max = loops * files.length;
 		int current = 0;
-		double learningRate = 0.01;
+		double learningRate = 0.1;
 		
 		for(int i=0; i<loops; i++) {
 			File[] shuffledFiles = Tools.shuffleFileArray(files);
