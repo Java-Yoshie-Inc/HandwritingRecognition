@@ -1,4 +1,4 @@
-package main.copy;
+package old;
 
 import java.awt.Color;
 import java.awt.Dimension;

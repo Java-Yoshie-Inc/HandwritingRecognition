@@ -1,6 +1,5 @@
-package main.copy;
+package main;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,12 +16,12 @@ import org.neuroph.util.TransferFunctionType;
 
 public class AI {
 	
-	private static final Color BACKGROUND_COLOR = Color.WHITE;
 	private static final File DATA_SET_PATH = new File("data");
 	private static final String BACKUP_FILE = "neural_network.nnet";
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.#####");
 	
 	private NeuralNetwork<BackPropagation> network;
+	private final DataSet dataSet;
 	
 	private static final int NN_IMAGE_SIZE = 25;
 	private static final int INPUT_SIZE = NN_IMAGE_SIZE * NN_IMAGE_SIZE;
@@ -32,56 +31,68 @@ public class AI {
 		network = new MultiLayerPerceptron(TransferFunctionType.SIGMOID, INPUT_SIZE, NN_IMAGE_SIZE * 4, NN_IMAGE_SIZE, OUTPUT_SIZE);
 		//network = NeuralNetwork.createFromFile("neural_network.nnet");
 		
+		//BackPropagation backPropagation = network.getLearningRule();
+		this.dataSet = loadDataSet();
+		
 		DataSet d = new DataSet(INPUT_SIZE, OUTPUT_SIZE);
 		d.addRow(new double[INPUT_SIZE], new double[OUTPUT_SIZE]);
 		network.learn(d);
 	}
 	
-	public void train(int epochs) {
-		File[] files = DATA_SET_PATH.listFiles();
+	private DataSet loadDataSet() {
+		File[] files = Tools.shuffleFileArray(DATA_SET_PATH.listFiles());
 
-		int max = epochs * files.length;
+		int max = files.length;
 		int current = 0;
 		long startTime = System.currentTimeMillis();
 		
 		DataSet dataSet = new DataSet(INPUT_SIZE, OUTPUT_SIZE);
 		
-		{
-			File[] shuffledFiles = Tools.shuffleFileArray(files);
+		for (File file : files) {
+			current++;
 
-			for (File file : shuffledFiles) {
-				current++;
+			int percentage = Math.round(100f / ((float) max / current));
+			String fileName = file.getName();
+			int number = Integer.parseInt(fileName.split("-")[0]);
+			long duration = Math.round(((100d / percentage) * (System.currentTimeMillis() - startTime)) / 1000d);
 
-				int percentage = Math.round(100f / ((float) max / current));
-				String fileName = file.getName();
-				int number = Integer.parseInt(fileName.split("-")[0]);
-				long duration = Math.round(((100d / percentage) * (System.currentTimeMillis() - startTime)) / 1000d);
+			System.out.println(current + "/" + max + " - " + percentage + "% - training " + number + " with file " + fileName + " - " + duration + "s remaining");
 
-				System.out.println(current + "/" + max + " - " + percentage + "% - training " + number + " with file " + fileName + " - " + duration + "s remaining");
+			try {
+				BufferedImage image = Tools.scaleImage(Tools.cropImage(ImageIO.read(file), HandwritingRecognition.BACKGROUND_COLOR), NN_IMAGE_SIZE, NN_IMAGE_SIZE);
 
-				try {
-					BufferedImage image = Tools.scaleImage(Tools.cropImage(ImageIO.read(file), BACKGROUND_COLOR), NN_IMAGE_SIZE, NN_IMAGE_SIZE);
-
-					double[] input = Tools.convertArray(Tools.convertImage(image));
-					double[] target = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-					target[number] = 1;
-					
-					dataSet.addRow(new DataSetRow(input, target));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				double[] input = Tools.convertArray(Tools.convertImage(image));
+				double[] target = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+				target[number] = 1;
+				
+				dataSet.addRow(new DataSetRow(input, target));
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		
-		//network.learn(dataSet);
+		System.out.println("Loading Data Set finished");
+		System.out.println();
+		
+		return dataSet;
+	}
+	
+	public void train(int epochs) {
+		long startTime = System.currentTimeMillis();
 		
 		for (int i = 0; i < epochs; i++) {
-			if(i % (int) (epochs / 100d) == 0) {
+			if(i % 100 == 0) {
 				System.out.println("Epoch: " + i);
 			}
-			network.getLearningRule().doOneLearningIteration(dataSet);
+			//network.getLearningRule().doLearningEpoch(network.getLearningRule().getTrainingSet());
+			//network.getLearningRule().doOneLearningIteration(network.getLearningRule().getTrainingSet());
+			network.learn(dataSet);
 		}
 		
+		long endTime = System.currentTimeMillis();
+		double duration = (endTime - startTime) / 1000d;
+		
+		System.out.println("Training finished - it took " + duration + "s");
 		System.out.println();
 	}
 	
@@ -90,7 +101,7 @@ public class AI {
 	}
 	
 	public int calculate(BufferedImage image) {
-		BufferedImage scaledImage = Tools.scaleImage(Tools.cropImage(image, BACKGROUND_COLOR), NN_IMAGE_SIZE, NN_IMAGE_SIZE);
+		BufferedImage scaledImage = Tools.scaleImage(Tools.cropImage(image, HandwritingRecognition.BACKGROUND_COLOR), NN_IMAGE_SIZE, NN_IMAGE_SIZE);
 		try {
 			ImageIO.write(scaledImage, "png", new File("recognized.png"));
 		} catch (IOException e) {

@@ -1,4 +1,4 @@
-package main.copy;
+package old;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

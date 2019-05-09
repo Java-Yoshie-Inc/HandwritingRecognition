@@ -1,6 +1,6 @@
 package neural_network;
 
-import main.LoadingBar;
+import old.LoadingBar;
 
 public class NeuralNetwork {
 	

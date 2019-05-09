@@ -67,5 +67,44 @@ public class Tools {
 		}
 		return output;
 	}
+
+	public static BufferedImage cropImage(BufferedImage sourceImage, Color color) {
+	    int left = 0;
+	    int right = 0;
+	    int top = 0;
+	    int bottom = 0;
+	    boolean firstFind = true;
+	    for (int x = 0; x < sourceImage.getWidth(); x++) {
+	        for (int y = 0; y < sourceImage.getWidth(); y++) {
+	            if (!new Color(sourceImage.getRGB(x, y)).equals(color)) {
+	                if (firstFind) {
+	                    left = x;
+	                }
+	                right = x;
+	                
+	                if (firstFind) {
+	                    top = y;
+	                } else {
+	                    top = Math.min(top, y);
+	                }
+	                
+	                if (bottom == 0) {
+	                    bottom = y;
+	                } else {
+	                    bottom = Math.max(bottom, y);
+	                }
+	                firstFind = false;
+	            }
+	        }
+	    }
+	    
+	    int width = right - left;
+	    int height = bottom - top;
+	    
+	    width = (width == 0) ? sourceImage.getWidth() : width;
+	    height = (height == 0) ? sourceImage.getHeight() : height;
+	    
+	    return sourceImage.getSubimage(left, top, width, height);
+	}
 	
 }
