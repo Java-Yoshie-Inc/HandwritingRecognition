@@ -48,7 +48,7 @@ public class HandwritingRecognition {
 
 	public HandwritingRecognition() {
 		this.ai = new AI();
-		ai.train(100);
+		ai.train(2);
 		
 		image = null;
 		outputFont = new Font("Arial", Font.PLAIN, 150);

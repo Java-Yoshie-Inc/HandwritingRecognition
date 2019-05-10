@@ -15,7 +15,7 @@ import javax.swing.border.CompoundBorder;
 @SuppressWarnings("serial")
 public class ProbabilityPanel extends JPanel {
 	
-	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.####");
+	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
 	
 	public ProbabilityPanel() {
 		GridBagLayout layout = new GridBagLayout();
@@ -39,7 +39,7 @@ public class ProbabilityPanel extends JPanel {
 			label.setFont(new Font("Arial", Font.BOLD, 16));
 			panel.add(label);
 			
-			JLabel label2 = new JLabel(String.valueOf(DECIMAL_FORMAT.format(d)));
+			JLabel label2 = new JLabel(String.valueOf(DECIMAL_FORMAT.format(d*100d)));
 			label2.setForeground(new Color((float) d, 0f, 0f));
 			label2.setFont(new Font("Arial", Font.BOLD, 16));
 			panel.add(label2);
