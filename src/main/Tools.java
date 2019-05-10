@@ -75,7 +75,7 @@ public class Tools {
 	    int bottom = 0;
 	    boolean firstFind = true;
 	    for (int x = 0; x < sourceImage.getWidth(); x++) {
-	        for (int y = 0; y < sourceImage.getWidth(); y++) {
+	        for (int y = 0; y < sourceImage.getHeight(); y++) {
 	            if (!new Color(sourceImage.getRGB(x, y)).equals(color)) {
 	                if (firstFind) {
 	                    left = x;

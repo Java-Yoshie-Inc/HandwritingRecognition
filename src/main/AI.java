@@ -3,7 +3,6 @@ package main;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 
 import javax.imageio.ImageIO;
 
@@ -18,7 +17,6 @@ public class AI {
 	
 	private static final File DATA_SET_PATH = new File("data");
 	private static final String BACKUP_FILE = "neural_network.nnet";
-	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.#####");
 	
 	private NeuralNetwork<BackPropagation> network;
 	private final DataSet dataSet;
@@ -81,7 +79,7 @@ public class AI {
 		long startTime = System.currentTimeMillis();
 		
 		for (int i = 0; i < epochs; i++) {
-			if(i % 100 == 0) {
+			if(i % 100 == 0 || true) {
 				System.out.println("Epoch: " + i);
 			}
 			//network.getLearningRule().doLearningEpoch(network.getLearningRule().getTrainingSet());
@@ -100,7 +98,7 @@ public class AI {
 		network.save(BACKUP_FILE);
 	}
 	
-	public int calculate(BufferedImage image) {
+	public Output calculate(BufferedImage image) {
 		BufferedImage scaledImage = Tools.scaleImage(Tools.cropImage(image, HandwritingRecognition.BACKGROUND_COLOR), NN_IMAGE_SIZE, NN_IMAGE_SIZE);
 		try {
 			ImageIO.write(scaledImage, "png", new File("recognized.png"));
@@ -110,32 +108,11 @@ public class AI {
 		
 		network.setInput(Tools.convertArray(Tools.convertImage(scaledImage)));
         network.calculate();
-        double[] output = network.getOutput();
-
-		double maxOutput = 0;
-		int number = -1;
-
-		for (int i = 0; i < output.length; i++) {
-			if (output[i] > maxOutput) {
-				maxOutput = output[i];
-				number = i;
-			}
-		}
+        
+        Output output = new Output(network.getOutput());
+        output.print();
 		
-		print(number, output);
-		
-		return number;
-	}
-	
-	private void print(double number, double... output) {
-		for(int i=0; i < output.length; i++) {
-			System.out.print(" | ");
-			System.out.print(i + ": " + DECIMAL_FORMAT.format(output[i]));
-			System.out.print(" | ");
-		}
-		System.out.println();
-		System.out.println("Recognized Number: " + number);
-		System.out.println();
+		return output;
 	}
 	
 }
