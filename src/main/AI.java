@@ -54,7 +54,7 @@ public class AI {
 			int number = Integer.parseInt(fileName.split("-")[0]);
 			long duration = Math.round(((100d / percentage) * (System.currentTimeMillis() - startTime)) / 1000d);
 
-			System.out.println(current + "/" + max + " - " + percentage + "% - training " + number + " with file " + fileName + " - " + duration + "s remaining");
+			System.out.println(current + "/" + max + " - " + percentage + "% - loading " + number + " with file " + fileName + " - " + duration + "s remaining");
 
 			try {
 				BufferedImage image = Tools.scaleImage(Tools.cropImage(ImageIO.read(file), HandwritingRecognition.BACKGROUND_COLOR), NN_IMAGE_SIZE, NN_IMAGE_SIZE);
@@ -79,16 +79,18 @@ public class AI {
 		long startTime = System.currentTimeMillis();
 		
 		for (int i = 0; i < epochs; i++) {
-			if(i % 100 == 0 || true) {
+			if(i % 1000 == 0 || false) {
 				System.out.println("Epoch: " + i);
 			}
-			//network.getLearningRule().doLearningEpoch(network.getLearningRule().getTrainingSet());
+			//network.getLearningRule().doLearningEpoch(dataSet);
 			//network.getLearningRule().doOneLearningIteration(network.getLearningRule().getTrainingSet());
 			network.learn(dataSet);
-		}
+		}this.network.getLearningRule().learn(dataSet);
 		
 		long endTime = System.currentTimeMillis();
 		double duration = (endTime - startTime) / 1000d;
+		
+		save();
 		
 		System.out.println("Training finished - it took " + duration + "s");
 		System.out.println();

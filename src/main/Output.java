@@ -34,6 +34,16 @@ public class Output {
 		return number;
 	}
 	
+	public double getHighestProbability() {
+		double probability = 0;
+		
+		for(double d : values) {
+			if(d > probability) probability = d;
+		}
+		
+		return probability;
+	}
+	
 	public void print() {
 		for(int i=0; i < values.length; i++) {
 			System.out.print(" | ");

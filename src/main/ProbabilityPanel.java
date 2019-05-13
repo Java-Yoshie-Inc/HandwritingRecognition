@@ -40,7 +40,7 @@ public class ProbabilityPanel extends JPanel {
 			panel.add(label);
 			
 			JLabel label2 = new JLabel(String.valueOf(DECIMAL_FORMAT.format(d*100d)));
-			label2.setForeground(new Color((float) d, 0f, 0f));
+			label2.setForeground(new Color((float) sigmoid(d, 0.3), 0f, 0f));
 			label2.setFont(new Font("Arial", Font.BOLD, 16));
 			panel.add(label2);
 			
@@ -49,6 +49,10 @@ public class ProbabilityPanel extends JPanel {
 			constraints.gridy = i;
 			add(panel, constraints);
 		}
+	}
+	
+	private double sigmoid(double x, double a) {
+		return -(1+a) * x / (-x-a);
 	}
 
 }

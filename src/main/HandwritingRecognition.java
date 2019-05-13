@@ -12,11 +12,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.UIManager;
@@ -48,7 +52,6 @@ public class HandwritingRecognition {
 
 	public HandwritingRecognition() {
 		this.ai = new AI();
-		ai.train(2);
 		
 		image = null;
 		outputFont = new Font("Arial", Font.PLAIN, 150);
@@ -147,6 +150,17 @@ public class HandwritingRecognition {
 		optionsPanel = new JPanel();
 		optionsPanel.setLayout(new FlowLayout());
 		
+		JButton trainButton = new JButton("Train Neural Network");
+		trainButton.setFont(font);
+		trainButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ai.train(1);
+				JOptionPane.showMessageDialog(frame, "Training finished");
+			}
+		});
+		optionsPanel.add(trainButton);
+		
 		resetButton = new JButton("Reset canvas");
 		resetButton.setFont(font);
 		resetButton.addActionListener(new ActionListener() {
@@ -180,6 +194,14 @@ public class HandwritingRecognition {
 
 	private void reset() {
 		Output output = ai.calculate(image);
+		
+		if(output.getHighestProbability() >= 0.92) {
+			try {
+				ImageIO.write(image, "png", new File("data-unchecked/" + output.getNumber() + "-" + System.currentTimeMillis() + ".png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		probabilityPanel.setOutput(output);
 		outputText.setText(String.valueOf(output.getNumber()));
