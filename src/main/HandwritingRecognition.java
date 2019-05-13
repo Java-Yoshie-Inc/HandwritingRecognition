@@ -99,7 +99,7 @@ public class HandwritingRecognition {
 		
 		JPanel inputPanel = new JPanel();
 		inputPanel.setLayout(new BorderLayout());
-		inputPanel.setBorder(new CompoundBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50), BorderFactory.createLineBorder(Color.BLACK)));
+		inputPanel.setBorder(new CompoundBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25), BorderFactory.createLineBorder(Color.BLACK)));
 		ioPanel.add(inputPanel, 0, 0);
 		
 		drawPanel = new JPanel() {
@@ -136,7 +136,7 @@ public class HandwritingRecognition {
 		
 		outputPanel = new JPanel();
 		outputPanel.setLayout(new BorderLayout());
-		outputPanel.setBorder(new CompoundBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50), BorderFactory.createLineBorder(Color.BLACK)));
+		outputPanel.setBorder(new CompoundBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25), BorderFactory.createLineBorder(Color.BLACK)));
 		ioPanel.add(outputPanel, 0, 1);
 
 		outputText = new JLabel(" ");

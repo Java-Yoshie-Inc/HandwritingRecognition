@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.border.CompoundBorder;
 
 @SuppressWarnings("serial")
@@ -39,10 +40,18 @@ public class ProbabilityPanel extends JPanel {
 			label.setFont(new Font("Arial", Font.BOLD, 16));
 			panel.add(label);
 			
-			JLabel label2 = new JLabel(String.valueOf(DECIMAL_FORMAT.format(d*100d)));
-			label2.setForeground(new Color((float) sigmoid(d, 0.3), 0f, 0f));
-			label2.setFont(new Font("Arial", Font.BOLD, 16));
-			panel.add(label2);
+			/*
+			 * JLabel label2 = new JLabel(String.valueOf(DECIMAL_FORMAT.format(d*100d)));
+			 * label2.setForeground(new Color((float) sigmoid(d, 0.3), 0f, 0f));
+			 * label2.setFont(new Font("Arial", Font.BOLD, 16));
+			 * panel.add(label2);
+			 */
+			
+			JProgressBar progressBar = new JProgressBar(0, 100);
+			progressBar.setValue((int) Math.round(d * 100d));
+			progressBar.setStringPainted(true);
+			progressBar.setForeground(new Color(0, 180, 0));
+			panel.add(progressBar);
 			
 			GridBagConstraints constraints = new GridBagConstraints();
 			constraints.gridx = 0;
